@@ -1,7 +1,7 @@
 "use client"
 import { useState } from 'react';
 import Button from '@mui/material/Button';
-import DrawerMenu from '@/app/components/drawerMenu';
+import DrawerMenu from '@/app/lib/components/drawerMenu';
 
 export default function Home() {
 
