@@ -1,0 +1,40 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+$focus-bg-color: #FFF2F2;
+$focus-border-color: #471515;
+$focus-font-color: #471515;
+$focus-primary-btn-bg-color: #FF4C4C;
+$focus-secondary-btn-bg-color: #FF4C4C;
+
+
+.focus-container {
+    background-color: $focus-bg-color;
+    border-color: $focus-border-color;
+    color: $focus-font-color;
+}
+
+
+:root {
+    --background: #ffffff;
+    --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: #0a0a0a;
+        --foreground: #ededed;
+    }
+}
+
+body {
+    color: var(--foreground);
+    background: var(--background);
+}
+
+@layer utilities {
+    .text-balance {
+        text-wrap: balance;
+    }
+}
