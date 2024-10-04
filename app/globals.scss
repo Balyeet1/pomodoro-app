@@ -2,42 +2,6 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-$focus-bg-color: rgba(255, 242, 242, 1);
-$focus-border-color: rgba(71, 21, 21, 1);
-$focus-font-color: rgba(71, 21, 21, 1);
-$focus-primary-btn-bg-color: rgba(227, 71, 71, 0.71);
-$focus-secondary-btn-bg-color: rgba(227, 71, 71, 0.25);
-
-
-.focus-container {
-    background-color: $focus-bg-color;
-    border-color: $focus-border-color;
-    color: $focus-font-color;
-
-    svg {
-        color: $focus-font-color;
-    }
-
-    .mode {
-        border-color: $focus-border-color;
-        background-color: $focus-secondary-btn-bg-color;
-    }
-
-    .primary-button {
-        background-color: $focus-primary-btn-bg-color;
-        border-radius: 15px;
-        padding: 1.2rem 1.8rem;
-    }
-
-    .second-button {
-        background-color: $focus-secondary-btn-bg-color;
-        border-radius: 10px;
-        padding: 0.5rem 0rem;
-    }
-
-}
-
-
 :root {
     --background: #ffffff;
     --foreground: #171717;

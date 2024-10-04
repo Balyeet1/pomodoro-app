@@ -1,0 +1,113 @@
+// Colors
+$focus-bg-color: rgba(255, 242, 242, 1);
+$focus-border-color: rgba(71, 21, 21, 1);
+$focus-font-color: rgba(71, 21, 21, 1);
+$focus-primary-btn-bg-color: rgba(227, 71, 71, 0.71);
+$focus-secondary-btn-bg-color: rgba(227, 71, 71, 0.25);
+
+$short-break-bg-color: rgba(242, 255, 245, 1);
+$short-break-border-color: rgba(20, 64, 29, 1);
+$short-break-font-color: rgba(20, 64, 29, 1);
+$short-break-primary-btn-bg-color: rgba(77, 218, 110, 0.62);
+$short-break-secondary-btn-bg-color: rgba(77, 218, 110, 0.23);
+
+$long-break-bg-color: rgba(242, 249, 255, 1);
+$long-break-border-color: rgba(21, 48, 71, 1);
+$long-break-font-color: rgba(21, 48, 71, 1);
+$long-break-primary-btn-bg-color: rgba(76, 172, 255, 0.62);
+$long-break-secondary-btn-bg-color: rgba(76, 172, 255, 0.20);
+
+// Private Classes  
+._main-button {
+    border-radius: 20px;
+    padding: 1rem 1.8rem;
+}
+
+._secondary-button {
+    border-radius: 10px;
+    padding: 0.6rem 0rem;
+}
+
+// VARIABLES
+
+// Focus Mode Variables
+.focus {
+    background-color: $focus-bg-color;
+    border-color: $focus-border-color;
+    color: $focus-font-color;
+
+    svg {
+        color: $focus-font-color;
+    }
+
+    .mode {
+        border-color: $focus-border-color;
+        background-color: $focus-secondary-btn-bg-color;
+    }
+
+    .primaryButton {
+        background-color: $focus-primary-btn-bg-color;
+        @extend ._main-button;
+    }
+
+    .secondButton {
+        background-color: $focus-secondary-btn-bg-color;
+        @extend ._secondary-button;
+    }
+
+}
+
+// Short Break Mode Variables
+.shortBreak {
+    background-color: $short-break-bg-color;
+    border-color: $short-break-border-color;
+    color: $short-break-font-color;
+
+    svg {
+        color: $short-break-font-color;
+    }
+
+    .mode {
+        border-color: $short-break-border-color;
+        background-color: $short-break-secondary-btn-bg-color;
+    }
+
+    .primaryButton {
+        background-color: $short-break-primary-btn-bg-color;
+        @extend ._main-button;
+    }
+
+    .secondButton {
+        background-color: $short-break-secondary-btn-bg-color;
+        @extend ._secondary-button;
+    }
+
+}
+
+
+// Long Break Mode Variables
+.longBreak {
+    background-color: $long-break-bg-color;
+    border-color: $long-break-border-color;
+    color: $long-break-font-color;
+
+    svg {
+        color: $long-break-font-color;
+    }
+
+    .mode {
+        border-color: $long-break-border-color;
+        background-color: $long-break-secondary-btn-bg-color;
+    }
+
+    .primaryButton {
+        background-color: $long-break-primary-btn-bg-color;
+        @extend ._main-button;
+    }
+
+    .secondButton {
+        background-color: $long-break-secondary-btn-bg-color;
+        @extend ._secondary-button;
+    }
+
+}
