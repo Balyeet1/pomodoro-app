@@ -62,8 +62,12 @@ export default function HomePage() {
       intervalId = setInterval(() => {
         setCount((prevCount) => prevCount - 1);
       }, 1000);
+
+      if (intervalId) {
+        return () => clearInterval(intervalId);
+      }
     }
-  }, [isTimerRunning]);
+  }, [isTimerRunning, count]);
 
   return (
     <>
@@ -86,8 +90,8 @@ export default function HomePage() {
                 </>
               ) : (
                 <>
-                  <h5 className='text-11xl leading-none'>25</h5>
-                  <h5 className='text-11xl leading-none'>00</h5>
+                  <h5 className='text-11xl leading-none'>{Math.floor(count / 60)}</h5>
+                  <h5 className='text-11xl leading-none'>{count % 60 < 10 ? `0${count % 60}` : count % 60}</h5>
                 </>
               )
 
