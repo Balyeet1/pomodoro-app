@@ -16,6 +16,7 @@ import styleVariables from '@/app/pomodoro/variables.module.scss';
 type PomodoroMode = {
   style: string;
   text: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Icon: React.ComponentType<any>;
 };
 
@@ -54,7 +55,7 @@ export default function HomePage() {
     }
   }
 
-  
+
 
   return (
     <>
