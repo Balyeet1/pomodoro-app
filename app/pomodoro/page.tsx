@@ -1,95 +1,78 @@
 "use client"
-import { useState } from 'react';
-import DrawerMenu from '@/app/lib/components/drawerMenu';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import BoltIcon from '@mui/icons-material/Bolt';
-import CoffeeRoundedIcon from '@mui/icons-material/CoffeeRounded';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import PauseIcon from '@mui/icons-material/Pause';
-import RocketLaunchRoundedIcon from '@mui/icons-material/RocketLaunchRounded';
-import FastForwardIcon from '@mui/icons-material/FastForward';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import Button from '@mui/material/Button';
-import { poppins } from '@/app/lib/fonts/fonts';
-import styleVariables from '@/app/pomodoro/variables.module.scss';
+import { useState, useEffect } from 'react'
+import DrawerMenu from '@/app/lib/components/drawerMenu'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
+import PauseIcon from '@mui/icons-material/Pause'
+import FastForwardIcon from '@mui/icons-material/FastForward'
+import PlayArrowIcon from '@mui/icons-material/PlayArrow'
+import Button from '@mui/material/Button'
+import TimerDisplay from '@/app/lib/components/pomodoro/TimerDisplay'
+import { pomodoroModes, PomodoroMode, pomodoroComponetsStyle } from '@/app/lib/utils/pomdoro'
 
-type PomodoroMode = {
-  style: string;
-  text: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Icon: React.ComponentType<any>;
-};
-
-const pomodoroModes: { [key: string]: PomodoroMode } = {
-  focus: {
-    style: styleVariables.focus,
-    text: "Focus",
-    Icon: BoltIcon,
-  },
-  shortBreak: {
-    style: styleVariables.shortBreak,
-    text: "Short Break",
-    Icon: CoffeeRoundedIcon,
-  },
-  longBreak: {
-    style: styleVariables.longBreak,
-    text: "Long Break",
-    Icon: RocketLaunchRoundedIcon,
-  },
-};
-
-export default function HomePage() {
-
-  const [isMenuOpen, setisMenuOpen] = useState<boolean>(false);
-
-  const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
-  const [currentMode, setCurrentMode] = useState<PomodoroMode>(pomodoroModes.focus);
+export default function Pomodoro() {
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
+  const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false)
+  const [count, setCount] = useState<number>(25 * 60) // 1 minute
+  const [currentMode, setCurrentMode] = useState<PomodoroMode>(pomodoroModes.focus)
 
   const changePomodoroMode = () => {
     if (currentMode === pomodoroModes.focus) {
-      setCurrentMode(pomodoroModes.shortBreak);
+      setCurrentMode(pomodoroModes.shortBreak)
     } else if (currentMode === pomodoroModes.shortBreak) {
-      setCurrentMode(pomodoroModes.longBreak);
+      setCurrentMode(pomodoroModes.longBreak)
     } else {
-      setCurrentMode(pomodoroModes.focus);
+      setCurrentMode(pomodoroModes.focus)
     }
   }
 
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout
+    if (isTimerRunning && count > 0) {
+      intervalId = setInterval(() => {
+        setCount((prevCount) => prevCount - 1)
+      }, 1000)
 
+      if (intervalId) {
+        return () => clearInterval(intervalId)
+      }
+    }
+  }, [isTimerRunning, count])
 
   return (
     <>
       <div className={`${currentMode.style}`}>
-        <DrawerMenu isOpen={isMenuOpen} onClose={() => setisMenuOpen(false)} />
-        <ExpandMoreIcon className='absolute top-4 left-4' onClick={() => setisMenuOpen(true)} />
+        <DrawerMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+        <ExpandMoreIcon className='absolute top-4 left-4' onClick={() => setIsMenuOpen(true)} />
         <div className='mx-32 p-4 flex flex-col items-center h-screen align-center justify-center'>
           <div className='w-full flex justify-center'>
-            <div className={`border-2 flex justify-centen items-center rounded-3xl p-1 ${styleVariables.mode}`}>
-              <currentMode.Icon className='mr-1 ml-1' fontSize="medium" />
-              <h5 className='text-xl mr-1'>{currentMode.text}</h5>
+            <div className={`border-2 flex items-center rounded-3xl p-1 ${pomodoroComponetsStyle.mode}`}>
+              <currentMode.Icon className='mr-1 ml-1' fontSize='medium' />
+              <h5 className='text-xl mr-1 whitespace-nowrap'>{currentMode.text}</h5>
             </div>
           </div>
-          <div className={`w-full flex flex-col align-center items-center mt-4 ${poppins.className}`}>
-            <h5 className='text-11xl leading-none'>25</h5>
-            <h5 className='text-11xl leading-none'>00</h5>
-          </div>
-          <div className='flex justify-center align-center items-center flex-nowrap mt-4'>
-            <Button className={`${styleVariables.secondButton}`}><MoreHorizIcon fontSize="medium" /></Button>
+          <TimerDisplay
+            minutes={Math.floor(count / 60)}
+            seconds={count % 60}
+            isTimerRunning={isTimerRunning}
+          />
+          <div className='flex justify-center items-center flex-nowrap mt-4'>
+            <Button className={`${pomodoroComponetsStyle.secondButton}`}><MoreHorizIcon fontSize='medium' /></Button>
             <div className='mx-4 flex justify-center'>
               <Button
                 onClick={() => setIsTimerRunning(!isTimerRunning)}
-                className={`${styleVariables.primaryButton}`}>
+                className={`${pomodoroComponetsStyle.primaryButton}`}>
                 {
                   isTimerRunning
-                    ? <PauseIcon fontSize="large" />
-                    : <PlayArrowIcon fontSize="large" />
+                    ? <PauseIcon fontSize='large' />
+                    : <PlayArrowIcon fontSize='large' />
                 }
               </Button>
             </div>
-            <Button onClick={() => changePomodoroMode()} className={`${styleVariables.secondButton}`}><FastForwardIcon fontSize="medium" /></Button>
+            <Button onClick={() => changePomodoroMode()} className={`${pomodoroComponetsStyle.secondButton}`}><FastForwardIcon fontSize='medium' /></Button>
           </div>
         </div>
       </div >
     </>
-  );
+  )
 }
