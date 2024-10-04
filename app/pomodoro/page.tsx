@@ -1,5 +1,5 @@
 "use client"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DrawerMenu from '@/app/lib/components/drawerMenu';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import BoltIcon from '@mui/icons-material/Bolt';
@@ -43,6 +43,7 @@ export default function HomePage() {
   const [isMenuOpen, setisMenuOpen] = useState<boolean>(false);
 
   const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
+  const [count, setCount] = useState<number>(25 * 60); // 1 minute
   const [currentMode, setCurrentMode] = useState<PomodoroMode>(pomodoroModes.focus);
 
   const changePomodoroMode = () => {
@@ -55,7 +56,14 @@ export default function HomePage() {
     }
   }
 
-
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+    if (isTimerRunning && count > 0) {
+      intervalId = setInterval(() => {
+        setCount((prevCount) => prevCount - 1);
+      }, 1000);
+    }
+  }, [isTimerRunning]);
 
   return (
     <>
@@ -66,12 +74,25 @@ export default function HomePage() {
           <div className='w-full flex justify-center'>
             <div className={`border-2 flex justify-centen items-center rounded-3xl p-1 ${styleVariables.mode}`}>
               <currentMode.Icon className='mr-1 ml-1' fontSize="medium" />
-              <h5 className='text-xl mr-1'>{currentMode.text}</h5>
+              <h5 className='text-xl mr-1 whitespace-nowrap'>{currentMode.text}</h5>
             </div>
           </div>
           <div className={`w-full flex flex-col align-center items-center mt-4 ${poppins.className}`}>
-            <h5 className='text-11xl leading-none'>25</h5>
-            <h5 className='text-11xl leading-none'>00</h5>
+            {isTimerRunning
+              ? (
+                <>
+                  <h5 className='text-11xl leading-none'><strong>{Math.floor(count / 60)}</strong></h5>
+                  <h5 className='text-11xl leading-none'><strong>{count % 60 < 10 ? `0${count % 60}` : count % 60}</strong></h5>
+                </>
+              ) : (
+                <>
+                  <h5 className='text-11xl leading-none'>25</h5>
+                  <h5 className='text-11xl leading-none'>00</h5>
+                </>
+              )
+
+
+            }
           </div>
           <div className='flex justify-center align-center items-center flex-nowrap mt-4'>
             <Button className={`${styleVariables.secondButton}`}><MoreHorizIcon fontSize="medium" /></Button>
