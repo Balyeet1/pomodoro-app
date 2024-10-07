@@ -17,6 +17,8 @@ $long-break-font-color: rgba(21, 48, 71, 1);
 $long-break-primary-btn-bg-color: rgba(76, 172, 255, 0.62);
 $long-break-secondary-btn-bg-color: rgba(76, 172, 255, 0.20);
 
+$reset-button-disable: rgba(156, 154, 154, 0.411);
+
 // Private Classes  
 ._main-button {
     border-radius: 20px;
@@ -50,12 +52,18 @@ $long-break-secondary-btn-bg-color: rgba(76, 172, 255, 0.20);
         @extend ._main-button;
     }
 
+    .resetButton {
+        background-color: $reset-button-disable;
+        @extend ._main-button;
+    }
+
     .secondButton {
         background-color: $focus-secondary-btn-bg-color;
         @extend ._secondary-button;
     }
 
 }
+
 
 // Short Break Mode Variables
 .shortBreak {
@@ -74,6 +82,11 @@ $long-break-secondary-btn-bg-color: rgba(76, 172, 255, 0.20);
 
     .primaryButton {
         background-color: $short-break-primary-btn-bg-color;
+        @extend ._main-button;
+    }
+
+    .resetButton {
+        background-color: $reset-button-disable;
         @extend ._main-button;
     }
 
@@ -102,6 +115,11 @@ $long-break-secondary-btn-bg-color: rgba(76, 172, 255, 0.20);
 
     .primaryButton {
         background-color: $long-break-primary-btn-bg-color;
+        @extend ._main-button;
+    }
+
+    .resetButton {
+        background-color: $reset-button-disable;
         @extend ._main-button;
     }
 

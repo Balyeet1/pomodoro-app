@@ -32,4 +32,5 @@ export const pomodoroComponetsStyle = {
     mode: styleVariables.mode,
     primaryButton: styleVariables.primaryButton,
     secondButton: styleVariables.secondButton,
+    resetButton: styleVariables.resetButton,
 }
