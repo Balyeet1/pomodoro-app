@@ -25,59 +25,69 @@ type TimersAmount = {
 }
 
 export default function Pomodoro() {
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
-  const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false)
-  const [count, setCount] = useState<number>(25 * 60) // 25 minute
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isTimerRunning, setIsTimerRunning] = useState(false)
+  const [count, setCount] = useState(25 * 60)
   const [currentMode, setCurrentMode] = useState<PomodoroMode>(pomodoroModes.focus)
 
-  const [modeTimerAmounts, setmodeTimerAmounts] = useState<TimersAmount>({
+  const [timersAmount, setTimersAmount] = useState<TimersAmount>({
     focus: 25 * 60,
     shortBreak: 5 * 60,
     longBreak: 15 * 60
   })
 
+  const canResetTimer = () => {
+    if (isTimerRunning) return true
+
+    if (currentMode === pomodoroModes.focus) {
+      return count !== timersAmount.focus
+    } else if (currentMode === pomodoroModes.shortBreak) {
+      return count !== timersAmount.shortBreak
+    } else {
+      return count !== timersAmount.longBreak
+    }
+  }
 
   const handleDialogClickOpen = () => {
-    setIsDialogOpen(true);
-  };
+    setIsDialogOpen(true)
+  }
 
   const handleDialogClose = () => {
-    setIsDialogOpen(false);
+    setIsDialogOpen(false)
 
     if (isTimerRunning) return
 
     if (currentMode === pomodoroModes.focus) {
-      setCount(modeTimerAmounts.focus);
+      setCount(timersAmount.focus)
     } else if (currentMode === pomodoroModes.shortBreak) {
-      setCount(modeTimerAmounts.shortBreak);
+      setCount(timersAmount.shortBreak)
     } else {
-      setCount(modeTimerAmounts.longBreak);
+      setCount(timersAmount.longBreak)
     }
-  };
-
+  }
 
   const changePomodoroMode = () => {
     if (currentMode === pomodoroModes.focus) {
       setCurrentMode(pomodoroModes.shortBreak)
-      setCount(modeTimerAmounts.shortBreak);
+      setCount(timersAmount.shortBreak)
     } else if (currentMode === pomodoroModes.shortBreak) {
       setCurrentMode(pomodoroModes.longBreak)
-      setCount(modeTimerAmounts.longBreak);
+      setCount(timersAmount.longBreak)
     } else {
       setCurrentMode(pomodoroModes.focus)
-      setCount(modeTimerAmounts.focus);
+      setCount(timersAmount.focus)
     }
     setIsTimerRunning(false)
   }
 
   const resetTimer = () => {
     if (currentMode === pomodoroModes.focus) {
-      setCount(modeTimerAmounts.focus);
+      setCount(timersAmount.focus)
     } else if (currentMode === pomodoroModes.shortBreak) {
-      setCount(modeTimerAmounts.shortBreak);
+      setCount(timersAmount.shortBreak)
     } else {
-      setCount(modeTimerAmounts.longBreak);
+      setCount(timersAmount.longBreak)
     }
     setIsTimerRunning(false)
   }
@@ -96,129 +106,127 @@ export default function Pomodoro() {
   }, [isTimerRunning, count])
 
   return (
-    <>
-      <div className={`${currentMode.style}`}>
-        <DrawerMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
-        <Dialog
-          open={isDialogOpen}
-          onClose={handleDialogClose}
-          aria-labelledby="responsive-dialog-title"
-          sx={{
-            '& .MuiPaper-root': {
-              borderRadius: '20px'
-            }
-          }}
+    <div className={`${currentMode.style}`}>
+      <DrawerMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      <Dialog
+        open={isDialogOpen}
+        onClose={handleDialogClose}
+        aria-labelledby="responsive-dialog-title"
+        sx={{
+          '& .MuiPaper-root': {
+            borderRadius: '20px'
+          }
+        }}
+      >
+        <div
+          className={`${currentMode.style}`}
         >
-          <div
-            className={`${currentMode.style}`}
-          >
-            <DialogTitle id="responsive-dialog-title">
-              <div className='flex justify-between items-center'>
-                <strong>
-                  Settings
-                </strong>
-                <CloseIcon fontSize='small' className='cursor-pointer' onClick={() => setIsDialogOpen(false)} />
-              </div>
-            </DialogTitle>
-            <Divider />
-            <DialogContent>
-              <div className='flex items-center justify-between '>
-                <h5 className='mr-8 text-sm'><strong>Focus lenght</strong></h5>
-                <Box sx={{ display: 'flex', alignItems: 'center', '& .MuiTextField-root': { m: 1, width: '7ch' } }}>
-                  <TextField
-                    id="outlined-number"
-                    type="number"
-                    size='small'
-                    value={modeTimerAmounts.focus / 60}
-                    onChange={(e) => setmodeTimerAmounts({ ...modeTimerAmounts, focus: Number(e.target.value) * 60 })}
-                    slotProps={{
-                      inputLabel: {
-                        shrink: true,
-                      },
-                    }}
-                  />
-                </Box>
-              </div>
-              <div className='flex items-center justify-between '>
-                <h5 className='mr-8 text-sm'><strong>Small break lenght</strong></h5>
-                <Box sx={{ display: 'flex', alignItems: 'center', '& .MuiTextField-root': { m: 1, width: '7ch' } }}>
-                  <TextField
-                    id="outlined-number"
-                    type="number"
-                    size='small'
-                    value={modeTimerAmounts.shortBreak / 60}
-                    onChange={(e) => setmodeTimerAmounts({ ...modeTimerAmounts, shortBreak: Number(e.target.value) * 60 })}
-                    slotProps={{
-                      inputLabel: {
-                        shrink: true,
-                      },
-                    }}
-                  />
-                </Box>
-              </div>
-              <div className='flex items-center justify-between '>
-                <h5 className='mr-8 text-sm'><strong>Long break lenght</strong></h5>
-                <Box sx={{ display: 'flex', alignItems: 'center', '& .MuiTextField-root': { m: 1, width: '7ch' } }}>
-                  <TextField
-                    id="outlined-number"
-                    type="number"
-                    size='small'
-                    value={modeTimerAmounts.longBreak / 60}
-                    onChange={(e) => setmodeTimerAmounts({ ...modeTimerAmounts, longBreak: Number(e.target.value) * 60 })}
-                    slotProps={{
-                      inputLabel: {
-                        shrink: true,
-                      },
-                    }}
-                  />
-                </Box>
-              </div>
-            </DialogContent>
-          </div>
-        </Dialog>
-        <ExpandMoreIcon className='absolute top-4 left-4' onClick={() => setIsMenuOpen(true)} />
-        <div className='mx-32 p-4 flex flex-col items-center h-screen align-center justify-center'>
-          <div className='w-full flex justify-center'>
-            <div className={`border-2 flex items-center rounded-3xl p-1 ${pomodoroComponetsStyle.mode}`}>
-              <currentMode.Icon className='mr-1 ml-1' fontSize='medium' />
-              <h5 className='text-xl mr-1 whitespace-nowrap'>{currentMode.text}</h5>
+          <DialogTitle id="responsive-dialog-title">
+            <div className='flex justify-between items-center'>
+              <strong>Settings</strong>
+              <CloseIcon fontSize='small' className='cursor-pointer' onClick={() => setIsDialogOpen(false)} />
             </div>
-          </div>
-          <TimerDisplay
-            minutes={Math.floor(count / 60)}
-            seconds={count % 60}
-            isTimerRunning={isTimerRunning}
-          />
-          <div className='flex justify-center items-center flex-nowrap mt-4'>
-            <Button
-              onClick={() => handleDialogClickOpen()}
-              className={`${pomodoroComponetsStyle.secondButton}`}>
-              <MoreHorizIcon fontSize='medium' />
-            </Button>
-            <div className='mr-1 ml-4 flex justify-center'>
-              <Button
-                onClick={() => setIsTimerRunning(!isTimerRunning)}
-                className={`${pomodoroComponetsStyle.primaryButton}`}>
-                {
-                  isTimerRunning
-                    ? <PauseIcon fontSize='large' />
-                    : <PlayArrowIcon fontSize='large' />
-                }
-              </Button>
+          </DialogTitle>
+          <Divider />
+          <DialogContent>
+            <div className='flex items-center justify-between '>
+              <h5 className='mr-8 text-sm'><strong>Focus length</strong></h5>
+              <Box sx={{ display: 'flex', alignItems: 'center', '& .MuiTextField-root': { m: 1, width: '7ch' } }}>
+                <TextField
+                  id="outlined-number"
+                  type="number"
+                  size='small'
+                  value={timersAmount.focus / 60}
+                  onChange={(e) => setTimersAmount({ ...timersAmount, focus: Number(e.target.value) * 60 })}
+                  slotProps={{
+                    inputLabel: {
+                      shrink: true,
+                    },
+                  }}
+                />
+              </Box>
             </div>
-            <div className='mr-4 ml-2 flex justify-center'>
-              <Button
-                disabled={!isTimerRunning}
-                onClick={resetTimer}
-                className={`${isTimerRunning ? pomodoroComponetsStyle.primaryButton : pomodoroComponetsStyle.resetButton}`}
-              >
-                <ReplayIcon fontSize='large' />
-              </Button>
+            <div className='flex items-center justify-between '>
+              <h5 className='mr-8 text-sm'><strong>Short break length</strong></h5>
+              <Box sx={{ display: 'flex', alignItems: 'center', '& .MuiTextField-root': { m: 1, width: '7ch' } }}>
+                <TextField
+                  id="outlined-number"
+                  type="number"
+                  size='small'
+                  value={timersAmount.shortBreak / 60}
+                  onChange={(e) => setTimersAmount({ ...timersAmount, shortBreak: Number(e.target.value) * 60 })}
+                  slotProps={{
+                    inputLabel: {
+                      shrink: true,
+                    },
+                  }}
+                />
+              </Box>
             </div>
-            <Button onClick={() => changePomodoroMode()} className={`${pomodoroComponetsStyle.secondButton}`}><FastForwardIcon fontSize='medium' /></Button>
+            <div className='flex items-center justify-between '>
+              <h5 className='mr-8 text-sm'><strong>Long break length</strong></h5>
+              <Box sx={{ display: 'flex', alignItems: 'center', '& .MuiTextField-root': { m: 1, width: '7ch' } }}>
+                <TextField
+                  id="outlined-number"
+                  type="number"
+                  size='small'
+                  value={timersAmount.longBreak / 60}
+                  onChange={(e) => setTimersAmount({ ...timersAmount, longBreak: Number(e.target.value) * 60 })}
+                  slotProps={{
+                    inputLabel: {
+                      shrink: true,
+                    },
+                  }}
+                />
+              </Box>
+            </div>
+          </DialogContent>
+        </div>
+      </Dialog>
+      <ExpandMoreIcon className='absolute top-4 left-4' onClick={() => setIsMenuOpen(true)} />
+      <div className='mx-32 p-4 flex flex-col items-center h-screen align-center justify-center'>
+        <div className='w-full flex justify-center'>
+          <div className={`border-2 flex items-center rounded-3xl p-1 ${pomodoroComponetsStyle.mode}`}>
+            <currentMode.Icon className='mr-1 ml-1' fontSize='medium' />
+            <h5 className='text-xl mr-1 whitespace-nowrap'>{currentMode.text}</h5>
           </div>
         </div>
-      </div >
-    </>
+        <TimerDisplay
+          minutes={Math.floor(count / 60)}
+          seconds={count % 60}
+          isTimerRunning={isTimerRunning}
+        />
+        <div className='flex justify-center items-center flex-nowrap mt-4'>
+          <Button
+            onClick={() => handleDialogClickOpen()}
+            className={`${pomodoroComponetsStyle.secondButton}`}
+          >
+            <MoreHorizIcon fontSize='medium' />
+          </Button>
+          <div className='mr-1 ml-4 flex justify-center'>
+            <Button
+              onClick={() => setIsTimerRunning(!isTimerRunning)}
+              className={`${pomodoroComponetsStyle.primaryButton}`}
+            >
+              {
+                isTimerRunning
+                  ? <PauseIcon fontSize='large' />
+                  : <PlayArrowIcon fontSize='large' />
+              }
+            </Button>
+          </div>
+          <div className='mr-4 ml-2 flex justify-center'>
+            <Button
+              disabled={!canResetTimer()}
+              onClick={resetTimer}
+              className={`${canResetTimer() ? pomodoroComponetsStyle.primaryButton : pomodoroComponetsStyle.resetButton}`}
+            >
+              <ReplayIcon fontSize='large' />
+            </Button>
+          </div>
+          <Button onClick={() => changePomodoroMode()} className={`${pomodoroComponetsStyle.secondButton}`}><FastForwardIcon fontSize='medium' /></Button>
+        </div>
+      </div>
+    </div>
   )
 }

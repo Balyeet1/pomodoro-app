@@ -9,12 +9,14 @@ $focus-secondary-btn-bg-color: rgba(227, 71, 71, 0.25);
 $short-break-bg-color: rgba(242, 255, 245, 1);
 $short-break-border-color: rgba(20, 64, 29, 1);
 $short-break-font-color: rgba(20, 64, 29, 1);
+$short-break-disable-color: rgba(20, 64, 29, 0.3);
 $short-break-primary-btn-bg-color: rgba(77, 218, 110, 0.62);
 $short-break-secondary-btn-bg-color: rgba(77, 218, 110, 0.23);
 
 $long-break-bg-color: rgba(242, 249, 255, 1);
 $long-break-border-color: rgba(21, 48, 71, 1);
 $long-break-font-color: rgba(21, 48, 71, 1);
+$long-break-disable-color: rgba(21, 48, 71, 0.3);
 $long-break-primary-btn-bg-color: rgba(76, 172, 255, 0.62);
 $long-break-secondary-btn-bg-color: rgba(76, 172, 255, 0.20);
 
@@ -94,7 +96,13 @@ $reset-button-disable: rgba(156, 154, 154, 0.116);
 
     .resetButton {
         background-color: $reset-button-disable;
+        border: 2px solid $short-break-disable-color;
+        padding: 0.9rem 1.4rem;
         @extend ._main-button;
+
+        svg {
+            color: $short-break-disable-color;
+        }
     }
 
     .secondButton {
@@ -127,7 +135,13 @@ $reset-button-disable: rgba(156, 154, 154, 0.116);
 
     .resetButton {
         background-color: $reset-button-disable;
+        border: 2px solid $long-break-disable-color;
+        padding: 0.9rem 1.4rem;
         @extend ._main-button;
+
+        svg {
+            color: $long-break-disable-color;
+        }
     }
 
     .secondButton {
