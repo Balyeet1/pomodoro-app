@@ -2,6 +2,7 @@
 $focus-bg-color: rgba(255, 242, 242, 1);
 $focus-border-color: rgba(71, 21, 21, 1);
 $focus-font-color: rgba(71, 21, 21, 1);
+$focus-disable-color: rgba(71, 21, 21, 0.3);
 $focus-primary-btn-bg-color: rgba(227, 71, 71, 0.71);
 $focus-secondary-btn-bg-color: rgba(227, 71, 71, 0.25);
 
@@ -17,12 +18,12 @@ $long-break-font-color: rgba(21, 48, 71, 1);
 $long-break-primary-btn-bg-color: rgba(76, 172, 255, 0.62);
 $long-break-secondary-btn-bg-color: rgba(76, 172, 255, 0.20);
 
-$reset-button-disable: rgba(156, 154, 154, 0.411);
+$reset-button-disable: rgba(156, 154, 154, 0.116);
 
 // Private Classes  
 ._main-button {
     border-radius: 20px;
-    padding: 1rem 1.8rem;
+    padding: 1rem 1.5rem;
 }
 
 ._secondary-button {
@@ -54,7 +55,13 @@ $reset-button-disable: rgba(156, 154, 154, 0.411);
 
     .resetButton {
         background-color: $reset-button-disable;
+        border: 2px solid $focus-disable-color;
+        padding: 0.9rem 1.4rem;
         @extend ._main-button;
+
+        svg {
+            color: $focus-disable-color;
+        }
     }
 
     .secondButton {
