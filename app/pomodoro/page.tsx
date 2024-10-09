@@ -265,6 +265,7 @@ function SettingsMenu({
   settingsOptions: SettingsOptions<number>[],
 }) {
 
+
   return (
     <GenericDialog
       isOpen={isDialogOpen}
@@ -272,32 +273,41 @@ function SettingsMenu({
       title="Settings"
       className={style}
     >
-      {settingsOptions.map((option) => (
-        <div className='flex items-center justify-between' key={option.label}>
-          <h5 className='mr-8 text-sm'><strong>{option.label}</strong></h5>
-          <Box sx={{ display: 'flex', alignItems: 'center', '& .MuiTextField-root': { m: 1, width: '7ch' } }}>
-            <TextField
-              id="outlined-number"
-              type="number"
-              size='small'
-              value={option.value}
-              onChange={(e) => {
-                e.preventDefault();
-                const value = Number(e.target.value);
-                if (value < 1 || value > 99) {
-                  return;
+      {settingsOptions.map((option) => {
+
+        return (
+          <div className='flex items-center justify-between' key={option.label}>
+            <h5 className='mr-8 text-sm'><strong>{option.label}</strong></h5>
+            <Box sx={{ display: 'flex', alignItems: 'center', '& .MuiTextField-root': { m: 1, width: '7ch' } }}>
+              <TextField
+                id="outlined-number"
+                type="number"
+                size='small'
+                defaultValue={option.value}
+                onBlur={(e) => {
+                  e.preventDefault()
+
+                  if (e.target.value === '' || Number(e.target.value) < 1) {
+                    e.target.value = '1'
+                  } else if (Number(e.target.value) > 99) {
+                    e.target.value = '99'
+                  }
+
+                  option.onChange(Number(e.target.value))
                 }
-                option.onChange(value);
-              }}
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
-              }}
-            />
-          </Box>
-        </div>
-      ))}
+                }
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
+              />
+            </Box>
+          </div>
+        )
+      }
+      )}
+
     </GenericDialog >
   )
 }
