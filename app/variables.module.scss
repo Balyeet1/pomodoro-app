@@ -1,5 +1,6 @@
 // Colors
 $focus-bg-color: rgba(255, 242, 242, 1);
+$focus-progress-empty-color: rgba(252, 221, 221, 0.8);
 $focus-border-color: rgba(71, 21, 21, 1);
 $focus-font-color: rgba(71, 21, 21, 1);
 $focus-disable-color: rgba(71, 21, 21, 0.3);
@@ -7,6 +8,7 @@ $focus-primary-btn-bg-color: rgba(227, 71, 71, 0.71);
 $focus-secondary-btn-bg-color: rgba(227, 71, 71, 0.25);
 
 $short-break-bg-color: rgba(242, 255, 245, 1);
+$short-break-progress-empty-color: rgba(214, 247, 222, 0.8);
 $short-break-border-color: rgba(20, 64, 29, 1);
 $short-break-font-color: rgba(20, 64, 29, 1);
 $short-break-disable-color: rgba(20, 64, 29, 0.3);
@@ -14,6 +16,7 @@ $short-break-primary-btn-bg-color: rgba(77, 218, 110, 0.62);
 $short-break-secondary-btn-bg-color: rgba(77, 218, 110, 0.23);
 
 $long-break-bg-color: rgba(242, 249, 255, 1);
+$long-break-progress-empty-color: rgba(207, 229, 247, 0.8);
 $long-break-border-color: rgba(21, 48, 71, 1);
 $long-break-font-color: rgba(21, 48, 71, 1);
 $long-break-disable-color: rgba(21, 48, 71, 0.3);
@@ -71,6 +74,15 @@ $reset-button-disable: rgba(156, 154, 154, 0.116);
         @extend ._secondary-button;
     }
 
+    .progressEmpty {
+        border-color: $focus-border-color;
+        background-color: $focus-progress-empty-color;
+    }
+
+    .progressFilled {
+        @extend .progressEmpty;
+        background-color: $focus-border-color;
+    }
 }
 
 
@@ -108,6 +120,16 @@ $reset-button-disable: rgba(156, 154, 154, 0.116);
     .secondButton {
         background-color: $short-break-secondary-btn-bg-color;
         @extend ._secondary-button;
+    }
+
+    .progressEmpty {
+        border-color: $short-break-border-color;
+        background-color: $short-break-progress-empty-color;
+    }
+
+    .progressFilled {
+        @extend .progressEmpty;
+        background-color: $short-break-border-color;
     }
 
 }
@@ -149,4 +171,13 @@ $reset-button-disable: rgba(156, 154, 154, 0.116);
         @extend ._secondary-button;
     }
 
+    .progressEmpty {
+        border-color: $long-break-border-color;
+        background-color: $long-break-progress-empty-color;
+    }
+
+    .progressFilled {
+        @extend .progressEmpty;
+        background-color: $long-break-border-color;
+    }
 }

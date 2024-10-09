@@ -13,11 +13,13 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box/Box'
 import ReplayIcon from '@mui/icons-material/Replay';
 import GenericDialog from '@/app/lib/components/generic/GenericDialog'
+import ProgressBalls from '@/app/lib/components/generic/GenericProgressBalls'
 
 type Settings = {
   focusMinutes: number,
   shortBreakMinutes: number,
-  longBreakMinutes: number
+  longBreakMinutes: number,
+  amountOfPomodori: number,
 }
 
 type SettingsOptions<E> = {
@@ -31,14 +33,17 @@ export default function PomodoroTimer() {
   const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
 
   const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const [timeInSeconds, setTimeInSeconds] = useState(25 * 60);
   const [pomodoroMode, setPomodoroMode] = useState<PomodoroMode>(pomodoroModes.focus);
 
   const [settings, setSettings] = useState<Settings>({
     focusMinutes: 25 * 60,
     shortBreakMinutes: 5 * 60,
     longBreakMinutes: 15 * 60,
+    amountOfPomodori: 4,
   });
+
+  const [timeInSeconds, setTimeInSeconds] = useState(settings.focusMinutes);
+  const [pomodori, setPomodori] = useState(settings.amountOfPomodori);
 
   const settingsOptions: SettingsOptions<number>[] = [
     {
@@ -68,6 +73,21 @@ export default function PomodoroTimer() {
           longBreakMinutes: value * 60,
         }),
     },
+    {
+      label: 'Amount of pomodori',
+      value: settings.amountOfPomodori,
+      onChange: (value: number) => {
+        if (value > 6) {
+          value = 6;
+        }
+
+        setPomodori(value);
+        setSettings({
+          ...settings,
+          amountOfPomodori: value,
+        });
+      }
+    },
   ];
 
   const getCurrentModeTimer = () => {
@@ -95,7 +115,7 @@ export default function PomodoroTimer() {
     setTimeInSeconds(getCurrentModeTimer());
   };
 
-  const resetTimer = () => {
+  const resetPomodoroTimer = () => {
     setTimeInSeconds(getCurrentModeTimer());
     setIsTimerRunning(false);
   };
@@ -103,25 +123,32 @@ export default function PomodoroTimer() {
   const changePomodoroMode = useCallback(() => {
     switch (pomodoroMode) {
       case pomodoroModes.focus:
+        setPomodori(pomodori - 1);
+        if (pomodori === 1) {
+          setPomodoroMode(pomodoroModes.longBreak);
+          setTimeInSeconds(settings.longBreakMinutes);
+          return;
+        }
         setPomodoroMode(pomodoroModes.shortBreak);
         setTimeInSeconds(settings.shortBreakMinutes);
         break;
       case pomodoroModes.shortBreak:
-        setPomodoroMode(pomodoroModes.longBreak);
-        setTimeInSeconds(settings.longBreakMinutes);
+        setPomodoroMode(pomodoroModes.focus);
+        setTimeInSeconds(settings.focusMinutes);
         break;
       case pomodoroModes.longBreak:
         setPomodoroMode(pomodoroModes.focus);
         setTimeInSeconds(settings.focusMinutes);
+        setPomodori(settings.amountOfPomodori);
         break;
       default:
         break;
     }
 
     setIsTimerRunning(false);
-  }, [pomodoroMode, settings, setPomodoroMode, setTimeInSeconds, setIsTimerRunning]);
+  }, [pomodoroMode, settings, setPomodoroMode, setTimeInSeconds, setIsTimerRunning, pomodori]);
 
-  
+
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
     if (isTimerRunning && timeInSeconds === 0) {
@@ -186,7 +213,7 @@ export default function PomodoroTimer() {
           <div className='mr-4 ml-2 flex justify-center'>
             <Button
               disabled={!canResetTimer()}
-              onClick={resetTimer}
+              onClick={resetPomodoroTimer}
               className={
                 canResetTimer()
                   ? pomodoroComponetsStyle.primaryButton
@@ -202,12 +229,20 @@ export default function PomodoroTimer() {
           >
             <FastForwardIcon fontSize='medium' />
           </Button>
+
+        </div>
+        <div className='mt-8'>
+          <ProgressBalls
+            amount={settings.amountOfPomodori}
+            amountFilled={settings.amountOfPomodori - pomodori}
+            ballStyleEmpty={pomodoroComponetsStyle.progressEmpty}
+            ballStyleFilled={pomodoroComponetsStyle.progressFilled}
+          />
         </div>
       </div>
     </div>
   );
 }
-
 /**
  * A generic settings menu dialog component.
  *
