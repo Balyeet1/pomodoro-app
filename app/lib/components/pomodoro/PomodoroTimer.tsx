@@ -192,6 +192,7 @@ export default function PomodoroTimer() {
                     <Button
                         onClick={() => setIsSettingsDialogOpen(true)}
                         className={`${pomodoroComponetsStyle.secondButton}`}
+                        aria-label='settings'
                     >
                         <MoreHorizIcon fontSize='medium' />
                     </Button>
@@ -199,6 +200,7 @@ export default function PomodoroTimer() {
                         <Button
                             onClick={() => setIsTimerRunning(!isTimerRunning)}
                             className={`${pomodoroComponetsStyle.primaryButton}`}
+                            aria-label='play/pause'
                         >
                             {
                                 isTimerRunning
@@ -211,6 +213,7 @@ export default function PomodoroTimer() {
                         <Button
                             disabled={!canResetTimer()}
                             onClick={resetPomodoroTimer}
+                            aria-label='reset'
                             className={
                                 canResetTimer()
                                     ? pomodoroComponetsStyle.primaryButton
@@ -223,6 +226,7 @@ export default function PomodoroTimer() {
                     <Button
                         onClick={() => changePomodoroMode()}
                         className={`${pomodoroComponetsStyle.secondButton}`}
+                        aria-label='Next pomodoro mode'
                     >
                         <FastForwardIcon fontSize='medium' />
                     </Button>

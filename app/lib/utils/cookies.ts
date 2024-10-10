@@ -10,7 +10,6 @@ export const setPomodoroSettingsCookie = (pomodoroSettings: PomodoroSettings) =>
     Cookie.set(
         'pomodoroSettings',
         JSON.stringify(pomodoroSettings), {
-        path: '/pomodoro',
         secure: true,
     })
 }
