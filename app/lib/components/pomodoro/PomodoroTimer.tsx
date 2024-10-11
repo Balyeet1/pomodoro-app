@@ -13,10 +13,15 @@ import SettingsMenu from '@/app/lib/components/pomodoro/SettingsMenu'
 import { getPomodoroSettingsCookie, setPomodoroSettingsCookie } from '@/app/lib/utils/cookies'
 import Calendar from '@/app/lib/components/generic/Calendar'
 import Drawer from '@mui/material/Drawer';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import IconButton from '@mui/material/IconButton'
 
 export default function PomodoroTimer() {
 
     const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
+
+    const [isCaledarDrawerOpen, setIsCalendarDrawerOpen] = useState(false);
 
     const [isTimerRunning, setIsTimerRunning] = useState(false);
     const [pomodoroMode, setPomodoroMode] = useState<PomodoroMode>(pomodoroModes.focus);
@@ -170,8 +175,12 @@ export default function PomodoroTimer() {
 
 
     return (
-        <div className={`${pomodoroMode.style}`}>
-
+        <>
+            <CalendarMonthIcon
+                sx={{ color: 'black' }}
+                className='absolute top-4 right-8'
+                onClick={() => setIsCalendarDrawerOpen(true)}
+            />
             <Drawer
                 anchor="right"
                 sx={{
@@ -183,85 +192,87 @@ export default function PomodoroTimer() {
                     },
                 }}
                 variant="persistent"
-                open={true}
+                open={isCaledarDrawerOpen}
             >
+                <ChevronLeftIcon className='mx-6 mt-6 text-black' onClick={() => setIsCalendarDrawerOpen(false)} />
                 <div className='p-4 flex flex-col align-center justify-center'>
                     <Calendar onChange={(date: string) => console.log(date)}></Calendar>
                 </div>
             </Drawer>
 
-
-            <SettingsMenu
-                isDialogOpen={isSettingsDialogOpen}
-                onClose={handleSettingsDialogClose}
-                style={pomodoroMode.style}
-                settingsOptions={settingsOptions}
-            />
-            <div className='mx-32 p-4 flex flex-col items-center h-screen align-center justify-center'>
-                <div className='w-full flex justify-center'>
-                    <div className={`border-2 flex items-center rounded-3xl p-1 ${pomodoroComponetsStyle.mode}`}>
-                        <pomodoroMode.Icon className='mr-1 ml-1' fontSize='medium' />
-                        <h5 className='text-xl mr-1 whitespace-nowrap'>{pomodoroMode.text}</h5>
-                    </div>
-                </div>
-                <TimerDisplay
-                    minutes={Math.floor(timeInSeconds / 60)}
-                    seconds={timeInSeconds % 60}
-                    isTimerRunning={isTimerRunning}
+            <div className={`${pomodoroMode.style}`}>
+                <SettingsMenu
+                    isDialogOpen={isSettingsDialogOpen}
+                    onClose={handleSettingsDialogClose}
+                    style={pomodoroMode.style}
+                    settingsOptions={settingsOptions}
                 />
-                <div className='flex justify-center items-center flex-nowrap mt-4'>
-                    <Button
-                        onClick={() => setIsSettingsDialogOpen(true)}
-                        className={`${pomodoroComponetsStyle.secondButton}`}
-                        aria-label='settings'
-                    >
-                        <MoreHorizIcon fontSize='medium' />
-                    </Button>
-                    <div className='mr-1 ml-4 flex justify-center'>
-                        <Button
-                            onClick={() => setIsTimerRunning(!isTimerRunning)}
-                            className={`${pomodoroComponetsStyle.primaryButton}`}
-                            aria-label='play/pause'
-                        >
-                            {
-                                isTimerRunning
-                                    ? <PauseIcon fontSize='large' />
-                                    : <PlayArrowIcon fontSize='large' />
-                            }
-                        </Button>
+                <div className='mx-32 p-4 flex flex-col items-center h-screen align-center justify-center'>
+                    <div className='w-full flex justify-center'>
+                        <div className={`border-2 flex items-center rounded-3xl p-1 ${pomodoroComponetsStyle.mode}`}>
+                            <pomodoroMode.Icon className='mr-1 ml-1' fontSize='medium' />
+                            <h5 className='text-xl mr-1 whitespace-nowrap'>{pomodoroMode.text}</h5>
+                        </div>
                     </div>
-                    <div className='mr-4 ml-2 flex justify-center'>
-                        <Button
-                            disabled={!canResetTimer()}
-                            onClick={resetPomodoroTimer}
-                            aria-label='reset'
-                            className={
-                                canResetTimer()
-                                    ? pomodoroComponetsStyle.primaryButton
-                                    : pomodoroComponetsStyle.resetButton
-                            }
-                        >
-                            <ReplayIcon fontSize='large' />
-                        </Button>
-                    </div>
-                    <Button
-                        onClick={() => changePomodoroMode()}
-                        className={`${pomodoroComponetsStyle.secondButton}`}
-                        aria-label='Next pomodoro mode'
-                    >
-                        <FastForwardIcon fontSize='medium' />
-                    </Button>
-
-                </div>
-                <div className='mt-8 mb-8'>
-                    <ProgressBalls
-                        amount={settings.amountOfPomodori}
-                        amountFilled={settings.amountOfPomodori - pomodori}
-                        ballStyleEmpty={pomodoroComponetsStyle.progressEmpty}
-                        ballStyleFilled={pomodoroComponetsStyle.progressFilled}
+                    <TimerDisplay
+                        minutes={Math.floor(timeInSeconds / 60)}
+                        seconds={timeInSeconds % 60}
+                        isTimerRunning={isTimerRunning}
                     />
+                    <div className='flex justify-center items-center flex-nowrap mt-4'>
+                        <Button
+                            onClick={() => setIsSettingsDialogOpen(true)}
+                            className={`${pomodoroComponetsStyle.secondButton}`}
+                            aria-label='settings'
+                        >
+                            <MoreHorizIcon fontSize='medium' />
+                        </Button>
+                        <div className='mr-1 ml-4 flex justify-center'>
+                            <Button
+                                onClick={() => setIsTimerRunning(!isTimerRunning)}
+                                className={`${pomodoroComponetsStyle.primaryButton}`}
+                                aria-label='play/pause'
+                            >
+                                {
+                                    isTimerRunning
+                                        ? <PauseIcon fontSize='large' />
+                                        : <PlayArrowIcon fontSize='large' />
+                                }
+                            </Button>
+                        </div>
+                        <div className='mr-4 ml-2 flex justify-center'>
+                            <Button
+                                disabled={!canResetTimer()}
+                                onClick={resetPomodoroTimer}
+                                aria-label='reset'
+                                className={
+                                    canResetTimer()
+                                        ? pomodoroComponetsStyle.primaryButton
+                                        : pomodoroComponetsStyle.resetButton
+                                }
+                            >
+                                <ReplayIcon fontSize='large' />
+                            </Button>
+                        </div>
+                        <Button
+                            onClick={() => changePomodoroMode()}
+                            className={`${pomodoroComponetsStyle.secondButton}`}
+                            aria-label='Next pomodoro mode'
+                        >
+                            <FastForwardIcon fontSize='medium' />
+                        </Button>
+
+                    </div>
+                    <div className='mt-8 mb-8'>
+                        <ProgressBalls
+                            amount={settings.amountOfPomodori}
+                            amountFilled={settings.amountOfPomodori - pomodori}
+                            ballStyleEmpty={pomodoroComponetsStyle.progressEmpty}
+                            ballStyleFilled={pomodoroComponetsStyle.progressFilled}
+                        />
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     )
 }
