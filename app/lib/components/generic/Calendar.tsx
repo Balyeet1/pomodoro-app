@@ -27,7 +27,9 @@ export default function Calendar({
                     }
                 }}
             />
-            <Button size='small' onClick={() => setValue(dayjs())}>Today</Button>
+            <div className='flex justify-center'>
+                <Button size='small' onClick={() => setValue(dayjs())}>Today</Button>
+            </div>
         </LocalizationProvider>
     )
 }
