@@ -22,7 +22,9 @@ export default function Calendar({
                 views={['year', 'month', 'day']}
                 onChange={(selectedDate) => {
                     setValue(selectedDate)
-                    onChange && onChange(selectedDate.format('DD-MM-YYYY'))
+                    if (onChange) {
+                        onChange(selectedDate.format('DD-MM-YYYY'))
+                    }
                 }}
             />
             <Button size='small' onClick={() => setValue(dayjs())}>Today</Button>

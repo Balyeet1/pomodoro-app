@@ -15,7 +15,7 @@ import Calendar from '@/app/lib/components/generic/Calendar'
 import Drawer from '@mui/material/Drawer';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import IconButton from '@mui/material/IconButton'
+//import IconButton from '@mui/material/IconButton'
 
 export default function PomodoroTimer() {
 
@@ -184,10 +184,10 @@ export default function PomodoroTimer() {
             <Drawer
                 anchor="right"
                 sx={{
-                    width: 400,
+                    width: 300,
                     flexShrink: 0,
                     '& .MuiDrawer-paper': {
-                        width: 400,
+                        width: 300,
                         boxSizing: 'border-box',
                     },
                 }}
