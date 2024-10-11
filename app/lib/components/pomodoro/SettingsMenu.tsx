@@ -43,7 +43,6 @@ export default function SettingsMenu({
                                 type="number"
                                 size='small'
                                 aria-label={option.label}
-                                label=""
                                 aria-labelledby={`${option.label}-number`}
                                 defaultValue={option.value}
                                 onBlur={(e) => {
@@ -61,6 +60,7 @@ export default function SettingsMenu({
                                 slotProps={{
                                     inputLabel: {
                                         shrink: true,
+                                        "aria-label": option.label,
                                     },
                                 }}
                             />

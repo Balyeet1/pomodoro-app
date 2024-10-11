@@ -11,7 +11,8 @@ import ReplayIcon from '@mui/icons-material/Replay';
 import ProgressBalls from '@/app/lib/components/generic/GenericProgressBalls'
 import SettingsMenu from '@/app/lib/components/pomodoro/SettingsMenu'
 import { getPomodoroSettingsCookie, setPomodoroSettingsCookie } from '@/app/lib/utils/cookies'
-
+import Calendar from '@/app/lib/components/generic/Calendar'
+import Drawer from '@mui/material/Drawer';
 
 export default function PomodoroTimer() {
 
@@ -170,6 +171,26 @@ export default function PomodoroTimer() {
 
     return (
         <div className={`${pomodoroMode.style}`}>
+
+            <Drawer
+                anchor="right"
+                sx={{
+                    width: 400,
+                    flexShrink: 0,
+                    '& .MuiDrawer-paper': {
+                        width: 400,
+                        boxSizing: 'border-box',
+                    },
+                }}
+                variant="persistent"
+                open={true}
+            >
+                <div className='p-4 flex flex-col align-center justify-center'>
+                    <Calendar onChange={(date: string) => console.log(date)}></Calendar>
+                </div>
+            </Drawer>
+
+
             <SettingsMenu
                 isDialogOpen={isSettingsDialogOpen}
                 onClose={handleSettingsDialogClose}
@@ -232,7 +253,7 @@ export default function PomodoroTimer() {
                     </Button>
 
                 </div>
-                <div className='mt-8'>
+                <div className='mt-8 mb-8'>
                     <ProgressBalls
                         amount={settings.amountOfPomodori}
                         amountFilled={settings.amountOfPomodori - pomodori}
