@@ -36,12 +36,13 @@ export default function SettingsMenu({
 
                 return (
                     <div className='flex items-center justify-between' key={option.label}>
-                        <h5 className='mr-8 text-sm'><strong>{option.label}</strong></h5>
+                        <span className='mr-8 text-sm'><strong>{option.label}</strong></span>
                         <Box sx={{ display: 'flex', alignItems: 'center', '& .MuiTextField-root': { m: 1, width: '7ch' } }}>
                             <TextField
-                                id="outlined-number"
+                                id={`${option.label}-number`}
                                 type="number"
                                 size='small'
+                                aria-label={`${option.label}`}
                                 defaultValue={option.value}
                                 onBlur={(e) => {
                                     e.preventDefault()
