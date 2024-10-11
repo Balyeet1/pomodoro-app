@@ -42,7 +42,9 @@ export default function SettingsMenu({
                                 id={`${option.label}-number`}
                                 type="number"
                                 size='small'
-                                aria-label={`${option.label}`}
+                                aria-label={option.label}
+                                label=""
+                                aria-labelledby={`${option.label}-number`}
                                 defaultValue={option.value}
                                 onBlur={(e) => {
                                     e.preventDefault()
