@@ -2,7 +2,7 @@
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import dayjs, { Dayjs } from 'dayjs';
 
@@ -14,6 +14,12 @@ export default function Calendar({
 
     const [value, setValue] = useState<Dayjs | null>(dayjs());
 
+    useEffect(() => {
+        if (onChange) {
+            onChange(value?.format('DD-MM-YYYY') || '')
+        }
+    }, [value])
+
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -22,9 +28,6 @@ export default function Calendar({
                 views={['year', 'month', 'day']}
                 onChange={(selectedDate) => {
                     setValue(selectedDate)
-                    if (onChange) {
-                        onChange(selectedDate.format('DD-MM-YYYY'))
-                    }
                 }}
             />
             <div className='flex justify-center'>

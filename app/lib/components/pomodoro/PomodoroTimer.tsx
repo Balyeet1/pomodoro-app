@@ -6,23 +6,14 @@ import FastForwardIcon from '@mui/icons-material/FastForward'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import Button from '@mui/material/Button'
 import TimerDisplay from '@/app/lib/components/pomodoro/TimerDisplay'
-import { pomodoroModes, PomodoroMode, pomodoroComponetsStyle, PomodoroSettings, SettingsOptions } from '@/app/lib/utils/pomdoro'
+import { pomodoroModes, PomodoroMode, pomodoroComponetsStyle, PomodoroSettings, SettingsOptions, pomodoroCacheApi } from '@/app/lib/utils/pomdoro'
 import ReplayIcon from '@mui/icons-material/Replay';
 import ProgressBalls from '@/app/lib/components/generic/GenericProgressBalls'
 import SettingsMenu from '@/app/lib/components/pomodoro/SettingsMenu'
-import { getPomodoroSettingsCookie, setPomodoroSettingsCookie } from '@/app/lib/utils/cookies'
-import Calendar from '@/app/lib/components/generic/Calendar'
-import Drawer from '@mui/material/Drawer';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import Divider from '@mui/material/Divider/Divider'
-//import IconButton from '@mui/material/IconButton'
 
 export default function PomodoroTimer() {
 
     const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
-
-    const [isCaledarDrawerOpen, setIsCalendarDrawerOpen] = useState(false);
 
     const [isTimerRunning, setIsTimerRunning] = useState(false);
     const [pomodoroMode, setPomodoroMode] = useState<PomodoroMode>(pomodoroModes.focus);
@@ -34,15 +25,15 @@ export default function PomodoroTimer() {
         amountOfPomodori: 4,
     });
 
-    const [timeInSeconds, setTimeInSeconds] = useState(settings.focusMinutes);
+    const [timeInSeconds, setTimeInSeconds] = useState(settings.focusMinutes * 60);
     const [pomodori, setPomodori] = useState(settings.amountOfPomodori);
 
 
     useEffect(() => {
         async function fetchData() {
-            const pomodoroSettings = await getPomodoroSettingsCookie();
+            const pomodoroSettings: PomodoroSettings = await pomodoroCacheApi.getSettings();
             setSettings(pomodoroSettings);
-            setTimeInSeconds(pomodoroSettings.focusMinutes);
+            setTimeInSeconds(pomodoroSettings.focusMinutes * 60);
             setPomodori(pomodoroSettings.amountOfPomodori);
         }
         fetchData();
@@ -53,29 +44,29 @@ export default function PomodoroTimer() {
     const settingsOptions: SettingsOptions<number>[] = [
         {
             label: 'Focus length',
-            value: settings.focusMinutes / 60,
+            value: settings.focusMinutes,
             onChange: (value: number) =>
                 setSettings({
                     ...settings,
-                    focusMinutes: value * 60,
+                    focusMinutes: value,
                 }),
         },
         {
             label: 'Short break length',
-            value: settings.shortBreakMinutes / 60,
+            value: settings.shortBreakMinutes,
             onChange: (value: number) =>
                 setSettings({
                     ...settings,
-                    shortBreakMinutes: value * 60,
+                    shortBreakMinutes: value,
                 }),
         },
         {
             label: 'Long break length',
-            value: settings.longBreakMinutes / 60,
+            value: settings.longBreakMinutes,
             onChange: (value: number) =>
                 setSettings({
                     ...settings,
-                    longBreakMinutes: value * 60,
+                    longBreakMinutes: value,
                 }),
         },
         {
@@ -110,20 +101,20 @@ export default function PomodoroTimer() {
 
     const canResetTimer = () =>
         isTimerRunning ||
-        getCurrentModeTimer() !== timeInSeconds;
+        getCurrentModeTimer() * 60 !== timeInSeconds;
 
     const handleSettingsDialogClose = () => {
         setIsSettingsDialogOpen(false);
-        setPomodoroSettingsCookie(settings);
+        pomodoroCacheApi.setSettings(settings);
 
         if (isTimerRunning) return;
 
 
-        setTimeInSeconds(getCurrentModeTimer());
+        setTimeInSeconds(getCurrentModeTimer() * 60);
     };
 
     const resetPomodoroTimer = () => {
-        setTimeInSeconds(getCurrentModeTimer());
+        setTimeInSeconds(getCurrentModeTimer() * 60);
         setIsTimerRunning(false);
     };
 
@@ -133,19 +124,19 @@ export default function PomodoroTimer() {
                 setPomodori(pomodori - 1);
                 if (pomodori === 1) {
                     setPomodoroMode(pomodoroModes.longBreak);
-                    setTimeInSeconds(settings.longBreakMinutes);
+                    setTimeInSeconds(settings.longBreakMinutes * 60);
                     return;
                 }
                 setPomodoroMode(pomodoroModes.shortBreak);
-                setTimeInSeconds(settings.shortBreakMinutes);
+                setTimeInSeconds(settings.shortBreakMinutes * 60);
                 break;
             case pomodoroModes.shortBreak:
                 setPomodoroMode(pomodoroModes.focus);
-                setTimeInSeconds(settings.focusMinutes);
+                setTimeInSeconds(settings.focusMinutes * 60);
                 break;
             case pomodoroModes.longBreak:
                 setPomodoroMode(pomodoroModes.focus);
-                setTimeInSeconds(settings.focusMinutes);
+                setTimeInSeconds(settings.focusMinutes * 60);
                 setPomodori(settings.amountOfPomodori);
                 break;
             default:
@@ -176,107 +167,78 @@ export default function PomodoroTimer() {
 
 
     return (
-        <>
-            <CalendarMonthIcon
-                sx={{ color: 'black' }}
-                className='absolute top-4 right-8'
-                onClick={() => setIsCalendarDrawerOpen(true)}
+        <div className={`${pomodoroMode.style}`}>
+            <SettingsMenu
+                isDialogOpen={isSettingsDialogOpen}
+                onClose={handleSettingsDialogClose}
+                style={pomodoroMode.style}
+                settingsOptions={settingsOptions}
             />
-            <Drawer
-                anchor="right"
-                sx={{
-                    width: 330,
-                    flexShrink: 0,
-                    '& .MuiDrawer-paper': {
-                        width: 330,
-                        boxSizing: 'border-box',
-                    },
-                }}
-                variant="persistent"
-                open={isCaledarDrawerOpen}
-            >
-                <ChevronRightIcon className='mx-4 mt-4 text-black' onClick={() => setIsCalendarDrawerOpen(false)} />
-                <div className='flex flex-col align-center justify-center'>
-                    <Calendar onChange={(date: string) => console.log(date)}></Calendar>
-                    <div className='mt-4'></div>
-                    <Divider /> 
-                    
+            <div className='mx-32 p-4 flex flex-col items-center h-screen align-center justify-center'>
+                <div className='w-full flex justify-center'>
+                    <div className={`border-2 flex items-center rounded-3xl p-1 ${pomodoroComponetsStyle.mode}`}>
+                        <pomodoroMode.Icon className='mr-1 ml-1' fontSize='medium' />
+                        <h5 className='text-xl mr-1 whitespace-nowrap'>{pomodoroMode.text}</h5>
+                    </div>
                 </div>
-            </Drawer>
-
-            <div className={`${pomodoroMode.style}`}>
-                <SettingsMenu
-                    isDialogOpen={isSettingsDialogOpen}
-                    onClose={handleSettingsDialogClose}
-                    style={pomodoroMode.style}
-                    settingsOptions={settingsOptions}
+                <TimerDisplay
+                    minutes={Math.floor(timeInSeconds / 60)}
+                    seconds={timeInSeconds % 60}
+                    isTimerRunning={isTimerRunning}
                 />
-                <div className='mx-32 p-4 flex flex-col items-center h-screen align-center justify-center'>
-                    <div className='w-full flex justify-center'>
-                        <div className={`border-2 flex items-center rounded-3xl p-1 ${pomodoroComponetsStyle.mode}`}>
-                            <pomodoroMode.Icon className='mr-1 ml-1' fontSize='medium' />
-                            <h5 className='text-xl mr-1 whitespace-nowrap'>{pomodoroMode.text}</h5>
-                        </div>
+                <div className='flex justify-center items-center flex-nowrap mt-4'>
+                    <Button
+                        onClick={() => setIsSettingsDialogOpen(true)}
+                        className={`${pomodoroComponetsStyle.secondButton}`}
+                        aria-label='settings'
+                    >
+                        <MoreHorizIcon fontSize='medium' />
+                    </Button>
+                    <div className='mr-1 ml-4 flex justify-center'>
+                        <Button
+                            onClick={() => setIsTimerRunning(!isTimerRunning)}
+                            className={`${pomodoroComponetsStyle.primaryButton}`}
+                            aria-label='play/pause'
+                        >
+                            {
+                                isTimerRunning
+                                    ? <PauseIcon fontSize='large' />
+                                    : <PlayArrowIcon fontSize='large' />
+                            }
+                        </Button>
                     </div>
-                    <TimerDisplay
-                        minutes={Math.floor(timeInSeconds / 60)}
-                        seconds={timeInSeconds % 60}
-                        isTimerRunning={isTimerRunning}
-                    />
-                    <div className='flex justify-center items-center flex-nowrap mt-4'>
+                    <div className='mr-4 ml-2 flex justify-center'>
                         <Button
-                            onClick={() => setIsSettingsDialogOpen(true)}
-                            className={`${pomodoroComponetsStyle.secondButton}`}
-                            aria-label='settings'
+                            disabled={!canResetTimer()}
+                            onClick={resetPomodoroTimer}
+                            aria-label='reset'
+                            className={
+                                canResetTimer()
+                                    ? pomodoroComponetsStyle.primaryButton
+                                    : pomodoroComponetsStyle.resetButton
+                            }
                         >
-                            <MoreHorizIcon fontSize='medium' />
+                            <ReplayIcon fontSize='large' />
                         </Button>
-                        <div className='mr-1 ml-4 flex justify-center'>
-                            <Button
-                                onClick={() => setIsTimerRunning(!isTimerRunning)}
-                                className={`${pomodoroComponetsStyle.primaryButton}`}
-                                aria-label='play/pause'
-                            >
-                                {
-                                    isTimerRunning
-                                        ? <PauseIcon fontSize='large' />
-                                        : <PlayArrowIcon fontSize='large' />
-                                }
-                            </Button>
-                        </div>
-                        <div className='mr-4 ml-2 flex justify-center'>
-                            <Button
-                                disabled={!canResetTimer()}
-                                onClick={resetPomodoroTimer}
-                                aria-label='reset'
-                                className={
-                                    canResetTimer()
-                                        ? pomodoroComponetsStyle.primaryButton
-                                        : pomodoroComponetsStyle.resetButton
-                                }
-                            >
-                                <ReplayIcon fontSize='large' />
-                            </Button>
-                        </div>
-                        <Button
-                            onClick={() => changePomodoroMode()}
-                            className={`${pomodoroComponetsStyle.secondButton}`}
-                            aria-label='Next pomodoro mode'
-                        >
-                            <FastForwardIcon fontSize='medium' />
-                        </Button>
+                    </div>
+                    <Button
+                        onClick={() => changePomodoroMode()}
+                        className={`${pomodoroComponetsStyle.secondButton}`}
+                        aria-label='Next pomodoro mode'
+                    >
+                        <FastForwardIcon fontSize='medium' />
+                    </Button>
 
-                    </div>
-                    <div className='mt-8 mb-8'>
-                        <ProgressBalls
-                            amount={settings.amountOfPomodori}
-                            amountFilled={settings.amountOfPomodori - pomodori}
-                            ballStyleEmpty={pomodoroComponetsStyle.progressEmpty}
-                            ballStyleFilled={pomodoroComponetsStyle.progressFilled}
-                        />
-                    </div>
+                </div>
+                <div className='mt-8 mb-8'>
+                    <ProgressBalls
+                        amount={settings.amountOfPomodori}
+                        amountFilled={settings.amountOfPomodori - pomodori}
+                        ballStyleEmpty={pomodoroComponetsStyle.progressEmpty}
+                        ballStyleFilled={pomodoroComponetsStyle.progressFilled}
+                    />
                 </div>
             </div>
-        </>
+        </div>
     )
 }
