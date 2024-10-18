@@ -15,7 +15,10 @@ export default function Home() {
         async function fetchData() {
             const response = await fetch(
                 `/api/image/list`,
-                { method: 'GET' },
+                {
+                    method: 'GET',
+                    cache: 'no-store'
+                },
             );
 
             const data = await response.json();
