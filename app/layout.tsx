@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "@/app/globals.scss";
 import { inter } from "@/app/lib/fonts/fonts";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
+import SideMenu from '@/app/lib/components/SideMenu'
 
 export const metadata: Metadata = {
   title: "Pomodoro App",
@@ -19,6 +20,7 @@ export default function RootLayout({
         className={`${inter.className} antialiased`}
       >
         <AppRouterCacheProvider>
+          <SideMenu />
           {children}
         </AppRouterCacheProvider>
       </body>

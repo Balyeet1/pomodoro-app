@@ -18,7 +18,7 @@ export default function Calendar({
         if (onChange) {
             onChange(value?.format('DD-MM-YYYY') || '')
         }
-    }, [value])
+    }, [value, onChange])
 
 
     return (

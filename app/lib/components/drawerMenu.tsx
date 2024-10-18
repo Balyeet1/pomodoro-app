@@ -9,15 +9,19 @@ import ListItemText from '@mui/material/ListItemText';
 import TimerIcon from '@mui/icons-material/Timer';
 import HomeIcon from '@mui/icons-material/Home';
 import Link from 'next/link';
+import CollectionsIcon from '@mui/icons-material/Collections';
+import { usePathname } from 'next/navigation';
+
 
 export default function DrawerMenu({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
+    const pathname = usePathname();
 
     const DrawerList = (
         <Box sx={{ width: 250 }} role="presentation" onClick={onClose}>
             <List>
                 <Link href="/">
                     <ListItem key={"home"} disablePadding>
-                        <ListItemButton>
+                        <ListItemButton selected={pathname === "/"}>
                             <ListItemIcon>
                                 <HomeIcon />
                             </ListItemIcon>
@@ -27,11 +31,21 @@ export default function DrawerMenu({ isOpen, onClose }: { isOpen: boolean, onClo
                 </Link>
                 <Link href="/pomodoro">
                     <ListItem key={"pomodoro"} disablePadding>
-                        <ListItemButton>
+                        <ListItemButton selected={pathname === "/pomodoro"}>
                             <ListItemIcon>
                                 <TimerIcon />
                             </ListItemIcon>
                             <ListItemText primary="Pomodoro" />
+                        </ListItemButton>
+                    </ListItem>
+                </Link>
+                <Link href="/gallery">
+                    <ListItem key={"gallery"} disablePadding>
+                        <ListItemButton selected={pathname === "/gallery"}>
+                            <ListItemIcon>
+                                <CollectionsIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Gallery" />
                         </ListItemButton>
                     </ListItem>
                 </Link>
