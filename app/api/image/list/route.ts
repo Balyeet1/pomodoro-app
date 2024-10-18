@@ -5,5 +5,7 @@ export async function GET(): Promise<NextResponse> {
 
     const response = NextResponse.json(await list());
 
+    console.log(response);
+
     return response
 }
