@@ -2,7 +2,7 @@ import styleVariables from '@/app/variables.module.scss'
 import BoltIcon from '@mui/icons-material/Bolt'
 import CoffeeRoundedIcon from '@mui/icons-material/CoffeeRounded'
 import RocketLaunchRoundedIcon from '@mui/icons-material/RocketLaunchRounded'
-import { getPomodoroSettingsCookie, setPomodoroSettingsCookie } from '@/app/lib/utils/cookies'
+import { getPomodoroSettingsCookie, setPomodoroSettingsCookie, getCalendarRecordsCookie, setCalendarRecordCookie } from '@/app/lib/utils/cookies'
 
 export type PomodoroSettings = {
     focusMinutes: number,
@@ -24,10 +24,11 @@ export type PomodoroMode = {
     Icon: React.ComponentType<any>
 }
 
-export type CalendarFocusRecords = {
+export type CalendarRecord = {
     startedAt: Date,
     endedAt: Date,
-    focusMinutes: number,
+    minutes: number,
+    comment?: string,
 }
 
 export const pomodoroDefaultSettings: PomodoroSettings = {
@@ -66,6 +67,8 @@ export const pomodoroComponetsStyle = {
 
 export const pomodoroCacheApi = {
     getSettings: getPomodoroSettingsCookie,
-    setSettings: setPomodoroSettingsCookie
+    setSettings: setPomodoroSettingsCookie,
+    getCalendarRecords: getCalendarRecordsCookie,
+    setCalendarRecord: setCalendarRecordCookie,
 }
 

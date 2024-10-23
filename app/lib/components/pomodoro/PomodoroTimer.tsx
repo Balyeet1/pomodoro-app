@@ -6,7 +6,7 @@ import FastForwardIcon from '@mui/icons-material/FastForward'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import Button from '@mui/material/Button'
 import TimerDisplay from '@/app/lib/components/pomodoro/TimerDisplay'
-import { pomodoroModes, PomodoroMode, pomodoroComponetsStyle, PomodoroSettings, SettingsOptions, pomodoroCacheApi } from '@/app/lib/utils/pomdoro'
+import { pomodoroModes, PomodoroMode, pomodoroComponetsStyle, PomodoroSettings, SettingsOptions, pomodoroCacheApi, CalendarRecord } from '@/app/lib/utils/pomdoro'
 import ReplayIcon from '@mui/icons-material/Replay';
 import ProgressBalls from '@/app/lib/components/generic/GenericProgressBalls'
 import SettingsMenu from '@/app/lib/components/pomodoro/SettingsMenu'
@@ -27,6 +27,8 @@ export default function PomodoroTimer() {
 
     const [timeInSeconds, setTimeInSeconds] = useState(settings.focusMinutes * 60);
     const [pomodori, setPomodori] = useState(settings.amountOfPomodori);
+
+    const [startedTime, setStartedTime] = useState<Date | null>(null);
 
 
     useEffect(() => {
@@ -113,6 +115,15 @@ export default function PomodoroTimer() {
         setTimeInSeconds(getCurrentModeTimer() * 60);
     };
 
+    const startOrPauseTimer = () => {
+        if (pomodoroMode === pomodoroModes.focus) {
+            if (!isTimerRunning && getCurrentModeTimer() * 60 === timeInSeconds) {
+                setStartedTime(new Date());
+            }
+        }
+        setIsTimerRunning(!isTimerRunning)
+    }
+
     const resetPomodoroTimer = () => {
         setTimeInSeconds(getCurrentModeTimer() * 60);
         setIsTimerRunning(false);
@@ -150,13 +161,23 @@ export default function PomodoroTimer() {
     useEffect(() => {
         let intervalId: NodeJS.Timeout;
         if (isTimerRunning && timeInSeconds === 0) {
+            if (pomodoroMode === pomodoroModes.focus) {
+                console.log("Started time: " + startedTime?.toLocaleString());
+                console.log("Ended time: " + new Date().toLocaleString());
+
+                pomodoroCacheApi.setCalendarRecord({
+                    startedAt: startedTime ?? new Date(),
+                    endedAt: new Date(),
+                    minutes: getCurrentModeTimer(),
+                });
+            }
             changePomodoroMode();
         }
 
         if (isTimerRunning && timeInSeconds > 0) {
             intervalId = setInterval(() => {
                 setTimeInSeconds((prevTime) => prevTime - 1);
-            }, 990);
+            }, 995);
 
             if (intervalId) {
                 return () => clearInterval(intervalId);
@@ -196,7 +217,7 @@ export default function PomodoroTimer() {
                     </Button>
                     <div className='mr-1 ml-4 flex justify-center'>
                         <Button
-                            onClick={() => setIsTimerRunning(!isTimerRunning)}
+                            onClick={startOrPauseTimer}
                             className={`${pomodoroComponetsStyle.primaryButton}`}
                             aria-label='play/pause'
                         >

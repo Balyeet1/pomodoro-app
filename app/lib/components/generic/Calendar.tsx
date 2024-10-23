@@ -16,9 +16,9 @@ export default function Calendar({
 
     useEffect(() => {
         if (onChange) {
-            onChange(value?.format('DD-MM-YYYY') || '')
+            onChange(value?.format('DD/MM/YYYY') || '')
         }
-    }, [value])
+    }, [value, onChange])
 
 
     return (
