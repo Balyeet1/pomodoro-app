@@ -12,9 +12,10 @@ export default function ImageUploadPage() {
 
     return (
         <div className='flex flex-col justify-center items-center h-screen'>
-            <h1>Upload image for gallery</h1>
+            <h1 className='text-2xl mb-4'><strong>Upload image for gallery</strong></h1>
 
             <form
+                className='flex flex-col justify-center items-center'
                 onSubmit={async (event) => {
                     event.preventDefault();
 
@@ -49,20 +50,21 @@ export default function ImageUploadPage() {
                     const newBlob = (await response.json()) as PutBlobResult;
 
                     setBlob(newBlob);
+                    inputFileRef.current.value = '';
                 }}
             >
                 <input name="file" ref={inputFileRef} type="file" required />
-                <button className='bg-green-950 ml-8 border border-white rounded-md px-2 py-1 text-white hover:bg-green-950' type="submit">Upload</button>
+                <div className='flex items-center mt-2'>
+                    Password:
+                    <input className='border border-black rounded-md ml-2 text-black' name="password" ref={inputPasswordRef} type="password" required />
+                    {error && <div className='ml-2 bg-red-500 rounded-md p-1 text-white'>{error}</div>}
+                </div>
+                <button className='bg-green-950 ml-8 border border-white rounded-md px-2 py-1 text-white hover:bg-green-950 mt-2' type="submit">Upload</button>
             </form>
-            <div className='flex justify-center items-center mt-4'>
-                Password:
-                <input className='border border-black rounded-md ml-2' name="password" ref={inputPasswordRef} type="password" required />
-                {error && <div className='ml-2 bg-red-500 rounded-md p-1 text-white'>{error}</div>}
-            </div>
             {
                 blob && (
                     <div>
-                        Blob url: <a href={blob.url}>{blob.url}</a>
+                        Image Uploaded
                         <Image
                             className='h-auto w-auto'
                             src={blob.url}

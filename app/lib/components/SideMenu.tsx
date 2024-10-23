@@ -9,7 +9,6 @@ export default function SideMenu() {
         <>
             <DrawerMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
             <ExpandMoreIcon
-                sx={{ color: 'black' }}
                 className='absolute top-4 left-4'
                 onClick={() => setIsMenuOpen(true)}
             />
