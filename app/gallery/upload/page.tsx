@@ -8,6 +8,7 @@ export default function ImageUploadPage() {
     const inputFileRef = useRef<HTMLInputElement>(null);
     const inputPasswordRef = useRef<HTMLInputElement>(null);
     const [blob, setBlob] = useState<PutBlobResult | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
     return (
         <div className='flex flex-col justify-center items-center h-screen'>
@@ -22,16 +23,20 @@ export default function ImageUploadPage() {
                     }
 
                     if (!inputPasswordRef.current?.value) {
-                        throw new Error("No password provided");
+                        setError("Set password");
+                        return
                     }
 
                     const isPasswordCorrect = await checkPassword(inputPasswordRef.current.value)
 
                     if (!isPasswordCorrect) {
-                        throw new Error("Wrong password");
+                        setError("Wrong password");
+                        return
                     }
 
                     const file = inputFileRef.current.files[0];
+
+                    setError(null);
 
                     const response = await fetch(
                         `/api/image/upload?filename=${file.name}`,
@@ -49,9 +54,10 @@ export default function ImageUploadPage() {
                 <input name="file" ref={inputFileRef} type="file" required />
                 <button className='bg-green-950 ml-8 border border-white rounded-md px-2 py-1 text-white hover:bg-green-950' type="submit">Upload</button>
             </form>
-            <div>
-                Password
-                <input name="password" ref={inputPasswordRef} type="password" required />
+            <div className='flex justify-center items-center mt-4'>
+                Password:
+                <input className='border border-black rounded-md ml-2' name="password" ref={inputPasswordRef} type="password" required />
+                {error && <div className='ml-2 bg-red-500 rounded-md p-1 text-white'>{error}</div>}
             </div>
             {
                 blob && (
@@ -65,7 +71,6 @@ export default function ImageUploadPage() {
                             height={260}
                         />
                     </div>
-
                 )
             }
         </div >

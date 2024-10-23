@@ -5,25 +5,19 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { ListBlobResultBlob } from '@vercel/blob';
+import { getGallery } from '@/app/lib/data/galleryApi';
 
 export default function Home() {
     const router = useRouter();
 
-    const [imageList, setImageList] = useState([]);
+    const [imageList, setImageList] = useState<ListBlobResultBlob[]>([]);
 
     useEffect(() => {
         async function fetchData() {
-            const response = await fetch(
-                `/api/image/list`,
-                {
-                    method: 'GET',
-                    cache: 'no-store'
-                },
-            );
 
-            const data = await response.json();
-            console.log(data.blobs);
-            setImageList(data.blobs);
+            const data = await getGallery();
+
+            setImageList(data);
         }
 
         fetchData();
