@@ -14,7 +14,6 @@ export default function CalendarDrawer() {
     return (
         <>
             <CalendarMonthIcon
-                sx={{ color: 'black' }}
                 className='absolute top-4 right-8'
                 onClick={() => setIsCalendarDrawerOpen(true)}
             />

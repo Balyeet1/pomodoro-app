@@ -17,6 +17,7 @@
     "@mui/material": "^6.1.1",
     "@mui/material-nextjs": "^6.1.1",
     "@mui/x-date-pickers": "^7.20.0",
+    "@vercel/blob": "^0.25.1",
     "autoprefixer": "^10.4.20",
     "dayjs": "^1.11.13",
     "js-cookie": "^3.0.5",
