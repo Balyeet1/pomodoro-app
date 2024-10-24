@@ -88,7 +88,7 @@ export default function PomodoroTimer() {
         },
     ];
 
-    const getCurrentModeTimer = () => {
+    const getCurrentModeTimer = useCallback(() => {
         switch (pomodoroMode) {
             case pomodoroModes.focus:
                 return settings.focusMinutes;
@@ -99,7 +99,7 @@ export default function PomodoroTimer() {
             default:
                 return 0;
         }
-    };
+    }, [pomodoroMode, settings]);
 
     const canResetTimer = () =>
         isTimerRunning ||
