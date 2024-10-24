@@ -6,7 +6,7 @@ import FastForwardIcon from '@mui/icons-material/FastForward'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import Button from '@mui/material/Button'
 import TimerDisplay from '@/app/lib/components/pomodoro/TimerDisplay'
-import { pomodoroModes, PomodoroMode, pomodoroComponetsStyle, PomodoroSettings, SettingsOptions, pomodoroCacheApi, CalendarRecord } from '@/app/lib/utils/pomdoro'
+import { pomodoroModes, PomodoroMode, pomodoroComponetsStyle, PomodoroSettings, SettingsOptions, pomodoroCacheApi } from '@/app/lib/utils/pomdoro'
 import ReplayIcon from '@mui/icons-material/Replay';
 import ProgressBalls from '@/app/lib/components/generic/GenericProgressBalls'
 import SettingsMenu from '@/app/lib/components/pomodoro/SettingsMenu'
@@ -183,7 +183,7 @@ export default function PomodoroTimer() {
                 return () => clearInterval(intervalId);
             }
         }
-    }, [isTimerRunning, timeInSeconds, changePomodoroMode]);
+    }, [isTimerRunning, timeInSeconds, changePomodoroMode, pomodoroMode, startedTime, getCurrentModeTimer]);
 
 
 

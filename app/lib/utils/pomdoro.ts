@@ -28,7 +28,17 @@ export type CalendarRecord = {
     startedAt: Date,
     endedAt: Date,
     minutes: number,
+}
+
+export type CookieCalendarRecord = {
+    startedAt: string,
+    endedAt: string,
+    minutes: number,
     comment?: string,
+}
+
+export type CookieCalendarRecords = {
+    [key: string]: CookieCalendarRecord[],
 }
 
 export const pomodoroDefaultSettings: PomodoroSettings = {

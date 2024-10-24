@@ -20,16 +20,19 @@ export const getCalendarRecordsCookie = async () => {
 }
 
 export const setCalendarRecordCookie = async (calendarRecord: CalendarRecord) => {
+    const recordDate = `${calendarRecord.startedAt.getDate()}/${calendarRecord.startedAt.getMonth() + 1}/${calendarRecord.startedAt.getFullYear()}`;
+    const formattedRecord = {
+        startedAt: `${calendarRecord.startedAt.getHours()}:${calendarRecord.startedAt.getMinutes()}`,
+        endedAt: `${calendarRecord.endedAt.getHours()}:${calendarRecord.endedAt.getMinutes()}`,
+        minutes: calendarRecord.minutes,
+    };
 
-    const calendarRecordDate = `${calendarRecord.startedAt.getDate()}/${calendarRecord.startedAt.getMonth() + 1}/${calendarRecord.startedAt.getFullYear()}`
+    const existingRecords = await getCalendarRecordsCookie();
 
-    const previousRecords = await getCalendarRecordsCookie()
+    const updatedCalendarRecords = {
+        ...existingRecords,
+        [recordDate]: existingRecords[recordDate] ? [...existingRecords[recordDate], formattedRecord] : [formattedRecord],
+    };
 
-    previousRecords[calendarRecordDate] = previousRecords[calendarRecordDate] ? [...previousRecords[calendarRecordDate], calendarRecord] : [calendarRecord]
-
-    Cookie.set(
-        'calendarRecords',
-        JSON.stringify(previousRecords), {
-        secure: true,
-    })
+    Cookie.set('calendarRecords', JSON.stringify(updatedCalendarRecords), { secure: true });
 }
