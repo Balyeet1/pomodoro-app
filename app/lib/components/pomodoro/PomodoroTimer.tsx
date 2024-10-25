@@ -4,10 +4,10 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import PauseIcon from '@mui/icons-material/Pause'
 import FastForwardIcon from '@mui/icons-material/FastForward'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
-import Button from '@mui/material/Button'
-import TimerDisplay from '@/app/lib/components/pomodoro/TimerDisplay'
-import { pomodoroModes, PomodoroMode, pomodoroComponetsStyle, PomodoroSettings, SettingsOptions, pomodoroCacheApi } from '@/app/lib/utils/pomdoro'
 import ReplayIcon from '@mui/icons-material/Replay';
+import Button from '@mui/material/Button'
+import { pomodoroModes, PomodoroMode, pomodoroComponetsStyle, PomodoroSettings, SettingsOptions, pomodoroCacheApi } from '@/app/lib/utils/pomdoro'
+import TimerDisplay from '@/app/lib/components/pomodoro/TimerDisplay'
 import ProgressBalls from '@/app/lib/components/generic/GenericProgressBalls'
 import SettingsMenu from '@/app/lib/components/pomodoro/SettingsMenu'
 
@@ -25,28 +25,16 @@ export default function PomodoroTimer() {
         amountOfPomodori: 4,
     });
 
-    const [timeInSeconds, setTimeInSeconds] = useState(settings.focusMinutes * 60);
-    const [pomodori, setPomodori] = useState(settings.amountOfPomodori);
+    const [timeInSeconds, setTimeInSeconds] = useState<number>(settings.focusMinutes * 60);
+    const [pomodori, setPomodori] = useState<number>(settings.amountOfPomodori);
 
     const [startedTime, setStartedTime] = useState<Date | null>(null);
-
-
-    useEffect(() => {
-        async function fetchData() {
-            const pomodoroSettings: PomodoroSettings = await pomodoroCacheApi.getSettings();
-            setSettings(pomodoroSettings);
-            setTimeInSeconds(pomodoroSettings.focusMinutes * 60);
-            setPomodori(pomodoroSettings.amountOfPomodori);
-        }
-        fetchData();
-    }, []);
-
-
 
     const settingsOptions: SettingsOptions<number>[] = [
         {
             label: 'Focus length',
             value: settings.focusMinutes,
+            disabled: isTimerRunning && pomodoroMode === pomodoroModes.focus,
             onChange: (value: number) =>
                 setSettings({
                     ...settings,
@@ -56,6 +44,7 @@ export default function PomodoroTimer() {
         {
             label: 'Short break length',
             value: settings.shortBreakMinutes,
+            disabled: isTimerRunning && pomodoroMode === pomodoroModes.shortBreak,
             onChange: (value: number) =>
                 setSettings({
                     ...settings,
@@ -65,6 +54,7 @@ export default function PomodoroTimer() {
         {
             label: 'Long break length',
             value: settings.longBreakMinutes,
+            disabled: isTimerRunning && pomodoroMode === pomodoroModes.longBreak,
             onChange: (value: number) =>
                 setSettings({
                     ...settings,
@@ -74,6 +64,7 @@ export default function PomodoroTimer() {
         {
             label: 'Amount of pomodori',
             value: settings.amountOfPomodori,
+            disabled: false,
             onChange: (value: number) => {
                 if (value > 6) {
                     value = 6;
@@ -159,12 +150,19 @@ export default function PomodoroTimer() {
 
 
     useEffect(() => {
+        async function fetchData() {
+            const pomodoroSettings: PomodoroSettings = await pomodoroCacheApi.getSettings();
+            setSettings(pomodoroSettings);
+            setTimeInSeconds(pomodoroSettings.focusMinutes * 60);
+            setPomodori(pomodoroSettings.amountOfPomodori);
+        }
+        fetchData();
+    }, []);
+
+    useEffect(() => {
         let intervalId: NodeJS.Timeout;
         if (isTimerRunning && timeInSeconds === 0) {
             if (pomodoroMode === pomodoroModes.focus) {
-                console.log("Started time: " + startedTime?.toLocaleString());
-                console.log("Ended time: " + new Date().toLocaleString());
-
                 pomodoroCacheApi.setCalendarRecord({
                     startedAt: startedTime ?? new Date(),
                     endedAt: new Date(),

@@ -4,9 +4,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider/Divider'
 
-export default function FocusSessionsList({ calendarFocusRecords }: { calendarFocusRecords: CookieCalendarRecord[] }) {
-    
-    const focusRecords = calendarFocusRecords || [];
+export default function FocusSessionsList({ focusRecords }: { focusRecords: CookieCalendarRecord[] }) {
     const totalFocusDuration = focusRecords.reduce((total, record) => total + record.minutes, 0);
 
     return (

@@ -42,6 +42,7 @@ export default function SettingsMenu({
                                 id={`${option.label}-number`}
                                 type="number"
                                 size='small'
+                                disabled={option.disabled}
                                 aria-label={option.label}
                                 aria-labelledby={`${option.label}-number`}
                                 defaultValue={option.value}

@@ -14,6 +14,7 @@ export type PomodoroSettings = {
 export type SettingsOptions<E> = {
     label: string,
     value: E,
+    disabled: boolean,
     onChange: (value: E) => void
 }
 
