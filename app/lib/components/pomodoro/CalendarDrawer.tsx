@@ -54,8 +54,8 @@ export default function CalendarDrawer() {
                         <strong className="text-2xl flex align-center justify-center mb-2">Focus Sessions</strong>
                         <List className="shadow-lg" sx={{ overflowY: 'auto', height: '40vh' }}>
                             {currentSelectedDate && calendarRecords && calendarRecords[currentSelectedDate] && calendarRecords[currentSelectedDate].map((record, index) => (
-                                <div>
-                                    <ListItem key={index}>
+                                <div key={index}>
+                                    <ListItem>
 
                                         <BoltIcon />
                                         <div className="flex mx-4 flex-col align-center justify-start mb-4o">
