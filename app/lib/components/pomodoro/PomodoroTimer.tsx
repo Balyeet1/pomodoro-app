@@ -172,6 +172,8 @@ export default function PomodoroTimer() {
             changePomodoroMode();
         }
 
+        // TODO: Fix the timer so that it works correctly when the browser or tab goes to the background.
+
         if (isTimerRunning && timeInSeconds > 0) {
             intervalId = setInterval(() => {
                 setTimeInSeconds((prevTime) => prevTime - 1);
